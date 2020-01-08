@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,7 +19,7 @@ namespace Graph
                 var tok = c.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 if (tok.Length == 1)
                 {
-                    graph.AddNode(new Node(long.Parse(tok[0])));
+                    graph.AddNode(new Node(long.Parse(tok[0]),new Point(0,0)));
                 }
                 else
                 {

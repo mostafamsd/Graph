@@ -23,7 +23,7 @@ namespace Graph
             MainWindow.SelectTool(newButton);
             MainWindow.CurrentButton = newButton;
         }
-        public IState ChangeColor(Point p)
+        public IState ChangeColor(object sender)
             => this;
 
         public IState DragNode(object sender, MouseEventArgs e)
@@ -32,21 +32,11 @@ namespace Graph
         public IState DrawNode(Point p)
             => this;
 
-        public IState SelectNode(Point p)
+        public IState SelectNode(object sender)
         {
-            List<Node> listOfNode = MainWindow.g.Nodes;
-            double X = p.X;
-            double Y = p.Y;
-            Node first;
-            for (int i = 0; i < listOfNode.Count; i++)
-            {
-                first = listOfNode[i];
-                if (Math.Abs(first.XCordinate - X) < first.Radius
-                    && Math.Abs(first.YCordinate - Y) < first.Radius)
-                {
-                    return new SelectSecondNodeState(first);
-                }
-            }
+            if(sender is Node)
+                return new SelectSecondNodeState((Node)sender);
+
             return this;
         }
     }

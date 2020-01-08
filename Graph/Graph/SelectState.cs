@@ -21,23 +21,22 @@ namespace Graph
         {
             if (MainWindow.Main.DragStart != null && e.LeftButton == MouseButtonState.Pressed)
             {
-                var element = (UIElement)sender;
                 var now = e.GetPosition(MainWindow.Main.DrawingScreen);
-                int i = MainWindow.Main.NodesOnScreen.IndexOf((Border)element);
-                MainWindow.g.Nodes[i].XCordinate = now.X - MainWindow.Main.DragStart.Value.X + MainWindow.g.Nodes[i].Radius;
-                MainWindow.g.Nodes[i].YCordinate = now.Y - MainWindow.Main.DragStart.Value.Y + MainWindow.g.Nodes[i].Radius;
-                Canvas.SetLeft(element, now.X - MainWindow.Main.DragStart.Value.X);
-                Canvas.SetTop(element, now.Y - MainWindow.Main.DragStart.Value.Y);
+                if(sender is Node)
+                {
+                    ((Node)sender).XCordinate = now.X - MainWindow.Main.DragStart.Value.X + ((Node)sender).UiNode.Radius;
+                    ((Node)sender).YCordinate = now.Y - MainWindow.Main.DragStart.Value.Y + ((Node)sender).UiNode.Radius;
+                }
             }
             return this;
         }
-        public IState ChangeColor(Point p)
+        public IState ChangeColor(object sender)
             => this;
 
         public IState DrawNode(Point p)
             => this;
 
-        public IState SelectNode(Point p)
+        public IState SelectNode(object sender)
             => this;
     }
 }
