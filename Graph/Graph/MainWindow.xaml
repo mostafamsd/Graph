@@ -22,6 +22,7 @@
                     <xctk:ColorPicker Name="colorpiker" Margin="38,283,148,260" ColorMode="ColorCanvas"  SelectedColor="White" DisplayColorTooltip="False" />
                     <Button x:Name="SaveGraph" Content="Save" HorizontalAlignment="Left" Height="36" Margin="38,331,0,0" VerticalAlignment="Top" Width="73" Click="SaveGraph_Click"/>
                     <Button x:Name="Clear" Content="Clear" HorizontalAlignment="Left" Height="35" Margin="169,332,0,0" VerticalAlignment="Top" Width="76" Click="Clear_Click"/>
+                    <TextBlock HorizontalAlignment="Left" Height="18" Margin="38,544,0,0" TextWrapping="Wrap" Text="note : Scroll on node for change radius" VerticalAlignment="Top" Width="219"/>
 
                 </Grid>
             </TabItem>
@@ -42,7 +43,7 @@
             </TabItem>
         </TabControl>
         <StackPanel Height="606" Canvas.Left="310" Canvas.Top="5" Width="974" Panel.ZIndex="8">
-            <Canvas x:Name="DrawingScreen" Height="602" Margin="0,5" Background="#FFFFF6F6" MouseLeftButtonUp="DrawingScreen_MouseLeftButtonUp" MouseLeftButtonDown="DrawingScreen_MouseLeftButtonDown" RenderTransformOrigin="0.5,0.5" VerticalAlignment="Center" HorizontalAlignment="Center" Width="974" MouseMove="DrawingScreen_MouseMove"/>
+            <Canvas x:Name="DrawingScreen" Height="602" Margin="0,5" Background="#FFFFF6F6" MouseLeftButtonUp="DrawingScreen_MouseLeftButtonUp" MouseLeftButtonDown="DrawingScreen_MouseLeftButtonDown" RenderTransformOrigin="0.5,0.5" VerticalAlignment="Center" HorizontalAlignment="Center" Width="974" MouseMove="DrawingScreen_MouseMove" />
         </StackPanel>
 
     </Canvas>

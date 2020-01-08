@@ -18,8 +18,8 @@ namespace Graph
     {
         IState DragNode(object sender, MouseEventArgs e);
         IState DrawNode(Point p);
-        IState SelectNode(Point p);
-        IState ChangeColor(Point p);
+        IState SelectNode(object sender);
+        IState ChangeColor(object sender);
         
     }
 }

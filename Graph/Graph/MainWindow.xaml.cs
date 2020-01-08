@@ -25,13 +25,13 @@ namespace Graph
     public partial class MainWindow : Window
     {
         public static SimpleGraph g;
-        IState State;
+        public IState State;
         public static MainWindow Main;
         public List<Border> NodesOnScreen;
         public List<Line> EdgesOnScreen;
         public static Button CurrentButton;
         private double Rate = 1;
-        public Point MyMousePoint;
+        public Point PreMousePoint;
         public static UIElement SelectedElement;
         public Point? DragStart = null;
         public bool AllowAddNode;
@@ -41,8 +41,6 @@ namespace Graph
             g = new SimpleGraph();
             this.State = new SelectState(SelectButton, SelectButton);
             Main = (MainWindow)MainWindows;
-            NodesOnScreen = new List<Border>();
-            EdgesOnScreen = new List<Line>();
             SelectedElement = null;
             AllowAddNode = true;
         }
@@ -94,10 +92,9 @@ namespace Graph
             double YMouse = e.GetPosition(DrawingScreen).Y;
             Point mouse = new Point(XMouse, YMouse);
             if (AllowAddNode)
-            {
                 State = State.DrawNode(mouse);
-            }
-            State = State.SelectNode(mouse);
+
+            //State = State.SelectNode(mouse);
             AllowAddNode = true;
         }
 
@@ -119,7 +116,7 @@ namespace Graph
         private void DrawingScreen_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (CurrentButton == MoveButton)
-                MyMousePoint = e.GetPosition(DrawingScreen);
+                PreMousePoint = e.GetPosition(DrawingScreen);
 
             double XMouse = e.GetPosition(DrawingScreen).X;
             double YMouse = e.GetPosition(DrawingScreen).Y;
@@ -138,7 +135,6 @@ namespace Graph
             DrawingScreen.LayoutTransform = new ScaleTransform(Rate, Rate);
             DrawingScreen.UpdateLayout();
         }
-
         private void ZoomOutButton_Click(object sender, RoutedEventArgs e)
         {
             if (Rate <= 1)
@@ -197,8 +193,6 @@ namespace Graph
         {
             DrawingScreen.Children.Clear();
             g.Clear();
-            NodesOnScreen.Clear();
-            EdgesOnScreen.Clear();
         }
 
         private void DrawingScreen_MouseMove(object sender, MouseEventArgs e)
@@ -206,38 +200,26 @@ namespace Graph
             if (CurrentButton == MoveButton && e.LeftButton == MouseButtonState.Pressed)
             {
                 Point now = e.GetPosition(DrawingScreen);
-                double ChangeX = now.X - MyMousePoint.X;
-                double ChangeY = now.Y - MyMousePoint.Y;
+                double ChangeX = now.X - PreMousePoint.X;
+                double ChangeY = now.Y - PreMousePoint.Y;
                 for (int i = 0; i < g.Nodes.Count; i++)
                 {
-                    double NewX = Canvas.GetLeft(NodesOnScreen[i]) + ChangeX;
-                    double NewY = Canvas.GetTop(NodesOnScreen[i]) + ChangeY;
-                    g.Nodes[i].XCordinate = NewX + g.Nodes[i].Radius;
-                    g.Nodes[i].YCordinate = NewY + g.Nodes[i].Radius;
-                    Canvas.SetLeft(NodesOnScreen[i], NewX);
-                    Canvas.SetTop(NodesOnScreen[i], NewY);
+                    g.Nodes[i].XCordinate += ChangeX;
+                    g.Nodes[i].YCordinate += ChangeY;
                 }
-
-                //there is a bug
                 for (int i = 0; i < g.Edges.Count; i++)
                 {
-                    EdgesOnScreen[i].X1 += ChangeX;
-                    EdgesOnScreen[i].X2 += ChangeX;
-                    EdgesOnScreen[i].Y1 += ChangeY;
-                    EdgesOnScreen[i].Y2 += ChangeY;
-                    g.Edges[i].Center.X += ChangeX;
-                    g.Edges[i].Center.Y += ChangeY;
-                    g.Edges[i].B -= ChangeY;
-                    g.Edges[i].B += (ChangeX * g.Edges[i].M);
+                    g.Edges[i].UiEdge.Line.X1 += ChangeX;
+                    g.Edges[i].UiEdge.Line.Y1 += ChangeY;
+                    g.Edges[i].UiEdge.Line.X2 += ChangeX;
+                    g.Edges[i].UiEdge.Line.Y2 += ChangeY;
                 }
-                MyMousePoint = now;
+                PreMousePoint = now;
             }
         }
-
         public void EnableDrag(UIElement element)
         {
             element.MouseDown += Element_MouseDown;
-            element.MouseMove += Element_MouseMove;
             element.MouseUp += Element_MouseUp;
         }
 
@@ -247,15 +229,12 @@ namespace Graph
             DragStart = null;
             element.ReleaseMouseCapture();
         }
-        private void Element_MouseMove(object sender, MouseEventArgs e)
-        {
-            State = State.DragNode(sender,e);
-        }
         private void Element_MouseDown(object sender, MouseButtonEventArgs e)
         {
             var element = (UIElement)sender;
             DragStart = e.GetPosition(element);
             element.CaptureMouse();
         }
+
     }
 }

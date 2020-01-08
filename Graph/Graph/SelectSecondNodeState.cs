@@ -23,59 +23,28 @@ namespace Graph
             this.FirstNode = firstnode;
         }
 
-        public IState ChangeColor(Point p)
+        public IState ChangeColor(object sender)
             => this;
 
         public IState DrawNode(Point p)
             => this;
 
-        public IState SelectNode(Point p)
+        public IState SelectNode(object sender)
         {
-            List<Node> listOfNode = MainWindow.g.Nodes;
-            double X = p.X;
-            double Y = p.Y;
-            Node Second;
-            for (int i = 0; i < listOfNode.Count; i++)
+            if(sender is Node)
             {
-                Second = listOfNode[i];
-                if (Math.Abs(Second.XCordinate - X) < Second.Radius
-                    && Math.Abs(Second.YCordinate - Y) < Second.Radius)
+                if (((Node)sender) != FirstNode )
                 {
-                    if (FirstNode != Second && !FirstNode.Adj.Contains(Second))
+                    if (!((Node)sender).Adj.Contains(FirstNode))
                     {
-                        Edge edge = MainWindow.g.AddEdge(FirstNode, Second);
-                        Line L_edge = DrawEdge(edge);
-                        L_edge.MouseLeftButtonDown += Edge_MouseLeftButtonDown;
-                        //MainWindow.Main.EnableDrag(L_edge);
-                        MainWindow.Main.DrawingScreen.Children.Add(L_edge);
-                        MainWindow.Main.EdgesOnScreen.Add(L_edge);
-                        return new SelectFirstNodeState(null,MainWindow.Main.ADDEdgeButton);
+                        Edge edge = MainWindow.g.AddEdge(FirstNode, (Node)sender);
+                        MainWindow.Main.DrawingScreen.Children.Add(edge.UiEdge.Line);
+                        return new SelectFirstNodeState(null, MainWindow.Main.ADDEdgeButton);
                     }
                 }
             }
             return this;
         }
-
-        private void Edge_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            MainWindow.UnSelectElement(MainWindow.SelectedElement);
-            MainWindow.SelectElement((UIElement)sender);
-            MainWindow.SelectedElement = (UIElement)sender;
-        }
-
-        private Line DrawEdge(Edge edge)
-        {
-            Line L_edge = new Line();
-            L_edge.StrokeThickness = 3;
-            L_edge.Stroke = edge.Color;
-            L_edge.X1 = edge.src.XCordinate;
-            L_edge.Y1 = edge.src.YCordinate;
-            L_edge.X2 = edge.dest.XCordinate;
-            L_edge.Y2 = edge.dest.YCordinate;
-            Panel.SetZIndex(L_edge, 0);
-            return L_edge;
-        }
-
         public IState DragNode(object sender, MouseEventArgs e)
             => this;
     }

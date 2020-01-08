@@ -19,40 +19,14 @@ namespace Graph
             MainWindow.SelectTool(newButton);
             MainWindow.CurrentButton = newButton;
         }
-        public IState ChangeColor(Point p)
+        public IState ChangeColor(object sender)
         {
-            List<Node> listofnode = MainWindow.g.Nodes;
-            for (int i = 0; i < listofnode.Count; i++)
-            {
-                Node select = listofnode[i];
-                if (Math.Abs(select.XCordinate - p.X) < select.Radius
-                    && Math.Abs(select.YCordinate - p.Y) < select.Radius)
-                {
-                    SolidColorBrush color =
-                        new SolidColorBrush(MainWindow.Main.colorpiker.SelectedColor.GetValueOrDefault());
-                    select.Color = color;
-                    (MainWindow.Main.NodesOnScreen[i]).Background = color;
-                    return this;
-                }
-            }
-            List<Edge> listofedge = MainWindow.g.Edges;
-            for (int i = 0; i < listofedge.Count; i++)
-            {
-                Edge select = listofedge[i];
-                if (Math.Abs(p.X - select.Center.X) <= Math.Abs(select.src.XCordinate - select.dest.XCordinate) / 2
-                 && Math.Abs(p.Y - select.Center.Y) <= Math.Abs(select.src.YCordinate - select.dest.YCordinate) / 2)
-                {
-                    if (Math.Abs((p.X * select.M + select.B) - p.Y) <= 5)
-                    {
-                        
-                        SolidColorBrush color =
-                        new SolidColorBrush(MainWindow.Main.colorpiker.SelectedColor.GetValueOrDefault());
-                        select.Color = color;
-                        (MainWindow.Main.EdgesOnScreen[i]).Stroke = color;
-                        return this;
-                    }
-                }
-            }
+            SolidColorBrush color =
+                new SolidColorBrush(MainWindow.Main.colorpiker.SelectedColor.GetValueOrDefault());
+            if(sender is Node)
+                ((Node)sender).UiNode.Color = color;
+            if (sender is Edge)
+                ((Edge)sender).UiEdge.Color = color;
             return this;
         }
 
@@ -62,7 +36,7 @@ namespace Graph
         public IState DrawNode(Point p)
             => this;
 
-        public IState SelectNode(Point p)
+        public IState SelectNode(object sender)
             => this;
     }
 }

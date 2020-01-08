@@ -19,7 +19,7 @@ namespace Graph
             MainWindow.CurrentButton = newButton;
         }
         
-        public IState ChangeColor(Point p)
+        public IState ChangeColor(object sender)
             => this;
 
         public IState DragNode(object sender, MouseEventArgs e)
@@ -28,7 +28,7 @@ namespace Graph
         public IState DrawNode(Point p)
             => this;
 
-        public IState SelectNode(Point p)
+        public IState SelectNode(object sender)
             => this;
     }
 }
